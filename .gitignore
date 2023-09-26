@@ -1,0 +1,7 @@
+venv
+ApiGateway/__pycache__/
+Autorizador/__pycache__/
+GestorUsuarios/__pycache__/
+NotificadorMensajeria/__pycache__/
+.DS_Store
+flaskr/modelos/__pycache__/
