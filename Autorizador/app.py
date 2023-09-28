@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify, make_response
 import requests
 import json
 import random
-from Validador import create_app
+from Autorizador import create_app
 from flask_restful import Api, Resource
 from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identity
 
@@ -21,7 +21,7 @@ RegistroLogin = requests.get('http://127.0.0.1:5000/RegistroLogin').json()
 
 
 
-class VistaValidador(Resource):
+class VistaAutorizador(Resource):
 
     def post(self): 
         ip_address = request.remote_addr     
@@ -44,4 +44,4 @@ class VistaValidador(Resource):
                 else:
                     return {'message': 'IP no autorizada'}, 401          
 
-api.add_resource(VistaValidador, '/Validador')
+api.add_resource(VistaAutorizador, '/autorizador')
