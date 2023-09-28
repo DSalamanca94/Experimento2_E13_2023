@@ -31,7 +31,7 @@ class LoginHistorical (db.Model):
     #datosGeolocalizacion 
     ip = db.Column(db.String(128))
     paisIp = db.Column(db.String(128))
-    cuidadIP   = db.Column(db.String(128))
+    cuidadIp   = db.Column(db.String(128))
     sistemaOperativo = db.Column(db.String(128))
     nombreEquipo = db.Column(db.String(128))
     #datosAnalisis
