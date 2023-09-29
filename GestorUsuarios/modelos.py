@@ -24,6 +24,7 @@ class Usuario(db.Model):
     correoElectronico = db.Column(db.String(128))
     telefono = db.Column(db.String(128))
     canalDobleAutenticacion = db.Column(db.Enum(CanalDobleAutenticacion))
+    loginHistorical = db.relationship('LoginHistorical', backref='usuario', lazy=True, cascade='all, delete-orphan')
 
 class LoginHistorical (db.Model):
     id = db.Column(db.Integer, primary_key = True)
