@@ -35,6 +35,7 @@ class VistaAutorizador(Resource):
         return {'sistema_operativo': sistema_operativo, 'nombre_equipo': nombre_equipo}
 
     def post(self):
+        ataqueIntroducido = request.json.get('ataqueIntroducido')
         contrasena = request.json.get('contrasena')
         usuario =  {'usuario':request.json.get('usuario')} 
 
@@ -48,17 +49,7 @@ class VistaAutorizador(Resource):
             info_geografica = requests.obtener_info_geografica(ip_address)        
             info_sistema = requests.obtener_info_sistema()
             
-
-            registro_Login = {
-                'idUsuario':InfoUsuario['id'],
-                'fecha': fecha_hora_actual,
-                'ip': ip_address,            
-                'paisIp': info_geografica.get('country'),
-                'ciudadIp': info_geografica.get('city'),
-                'sistemaOperativo': info_sistema.get('sistema_operativo'),
-                'nombreEquipo': info_sistema.get('nombre_equipo')
-                }
-            
+          
             if contrasena == InfoUsuario['contrasena']:
 
                 # Si el usuario no tiene registros de login, entregar el token
@@ -75,10 +66,10 @@ class VistaAutorizador(Resource):
 
                         if (
                             registro['ip'] == ip_address and
-                            registro['paisIp'] == registro_Login['paisIp'] and
-                            registro['ciudadIp'] == registro_Login['ciudadIp'] and
-                            registro['sistemaOperativo'] == registro_Login['sistemaOperativo'] and
-                            registro['nombreEquipo'] == registro_Login['nombreEquipo']
+                            registro['paisIp'] == info_geografica.get('country') and
+                            registro['ciudadIp'] == info_geografica.get('city') and
+                            registro['sistemaOperativo'] == info_sistema.get('sistema_operativo') and
+                            registro['nombreEquipo'] == info_sistema.get('nombre_equipo')
                         ):
                             registroEncontrado = True
                             break
@@ -88,6 +79,19 @@ class VistaAutorizador(Resource):
                     if registroEncontrado == False:
                         return {'message': 'Se requiere doble Autenticacion'}, 401
                     else:
+                            registro_Login = {
+                                'idUsuario':InfoUsuario['id'],
+                                'fecha': fecha_hora_actual,
+                                'ip': ip_address,            
+                                'paisIp': info_geografica.get('country'),
+                                'ciudadIp': info_geografica.get('city'),
+                                'sistemaOperativo': info_sistema.get('sistema_operativo'),
+                                'nombreEquipo': info_sistema.get('nombre_equipo'),
+                                'tipoActividad': 'CONFIABLE',
+                                'accion': 'NINGUNA',
+                                'ataqueIntroducido': False
+                            }
+
                             token = create_access_token(identity=usuario)
                             requests.post('http://127.0.0.1:5000/ResigroLogin', json=registro_Login)
                             return {'token': token}, 200   
