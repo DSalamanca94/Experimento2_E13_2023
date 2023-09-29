@@ -8,6 +8,7 @@ db = SQLAlchemy()
 class TipoActividad(enum.Enum):
    CONFIABLE = 1
    SOSPECHOSA = 2
+   CREDENCIALES_INCORRECTAS = 3
 
 class AccionDobleAutenticacion(enum.Enum):
    NINGUNA = 1
@@ -33,6 +34,7 @@ class Usuario(db.Model):
     correoElectronico = db.Column(db.String(128))
     telefono = db.Column(db.String(128))
     canalDobleAutenticacion = db.Column(db.Enum(CanalDobleAutenticacion))
+    loginHistorical = db.relationship('LoginHistorical', backref='usuario', lazy=True, cascade='all, delete-orphan')
 
 class LoginHistorical (db.Model):
     id = db.Column(db.Integer, primary_key = True)
@@ -41,7 +43,7 @@ class LoginHistorical (db.Model):
     #datosGeolocalizacion 
     ip = db.Column(db.String(128))
     paisIp = db.Column(db.String(128))
-    ciudadIP   = db.Column(db.String(128))
+    ciudadIp   = db.Column(db.String(128))
     sistemaOperativo = db.Column(db.String(128))
     nombreEquipo = db.Column(db.String(128))
     #datosAnalisis
