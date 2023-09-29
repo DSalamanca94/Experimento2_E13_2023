@@ -72,7 +72,14 @@ class VistaAutorizador(Resource):
                     registroEncontrado=False
 
                     for registro in RegistroLogin:
-                        if registro['ip'] == ip_address & registro['paisIp'] == registro_Login['paisIp'] & registro['ciudadIp'] == registro_Login['ciudadIp'] & registro['sistemaOperativo'] == registro_Login['sistemaOperativo'] & registro['nombreEquipo'] == registro_Login['nombreEquipo']:
+
+                        if (
+                            registro['ip'] == ip_address and
+                            registro['paisIp'] == registro_Login['paisIp'] and
+                            registro['ciudadIp'] == registro_Login['ciudadIp'] and
+                            registro['sistemaOperativo'] == registro_Login['sistemaOperativo'] and
+                            registro['nombreEquipo'] == registro_Login['nombreEquipo']
+                        ):
                             registroEncontrado = True
                             break
                         else:
