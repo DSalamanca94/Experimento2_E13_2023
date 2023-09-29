@@ -6,6 +6,7 @@ db = SQLAlchemy()
 class TipoActividad(enum.Enum):
    CONFIABLE = 1
    SOSPECHOSA = 2
+   CREDENCIALES_INCORRECTAS = 3
 
 class AccionDobleAutenticacion(enum.Enum):
    NINGUNA = 1
