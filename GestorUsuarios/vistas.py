@@ -82,12 +82,11 @@ class VistaLoginHistorical(Resource):
 
        
     def get(self):
-        # Consulta los usuarios y ordénalos por nombre en orden descendente (Agregar nombre)
-        usuarios = Usuario.query.order_by(Usuario.id.asc()).all()    
+        # Consulta los usuarios y ordénalos por nombre en orden descendente 
+        usuarios = Usuario.query.order_by(Usuario.usuario.asc()).all()    
 
         # Serializa y devuelve los resultados (regresar un solo usuario.usuario .first)
-        return [UsuarioSchema.dump(usuario) for usuario in usuarios]
-        
+        return Usuario.first
 
 
 
