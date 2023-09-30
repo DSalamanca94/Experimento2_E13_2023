@@ -2,7 +2,7 @@ import datetime
 from pydoc import describe
 from flask import request
 from .modelos import db, LoginHistorical,LoginHistoricalSchema, Usuario, UsuarioSchema,  LoginHistorical
-from flask_restful import Resource
+from flask_restful import Resource, abort
 from sqlalchemy.exc import IntegrityError
 
 usuario_schema = UsuarioSchema()
@@ -12,7 +12,7 @@ login_schema = LoginHistoricalSchema()
 class VistaUsuario(Resource):
     def post(self):
         # Obtener los datos JSON de la solicitud
-        data = request.json
+        data = request.json()
 
         # Crear un nuevo usuario
         nuevo_usuario = Usuario(
@@ -32,6 +32,9 @@ class VistaUsuario(Resource):
         usuario_string = request.json.get('usuario')
         # Consulta los usuarios y ordénalos por nombre en orden descendente 
         usuario = Usuario.query.filter_by(usuario=usuario_string).first()
+
+        if usuario is None:
+            abort(404)  
 
         # Serializa y devuelve los resultados (regresar un solo usuario.usuario .first)
         return usuario_schema.dump(usuario)

@@ -42,8 +42,10 @@ class VistaAutorizador(Resource):
         contrasena = request.json.get('contrasena')
         usuario =  {'usuario':request.json.get('usuario')} 
 
+        
 
         response = requests.get('http://127.0.0.1:5000/usuario', json=usuario)
+        
 
         if response.status_code == 200:
             InfoUsuario = response.json()
@@ -58,12 +60,20 @@ class VistaAutorizador(Resource):
 
             if  ataqueIntroducido == True:
                 ip_address = fake.ipv4()
+                sistema_operativo = fake.random_element(elements=("Windows 10", "macOS", "Linux"))
+                nombre_equipo = fake.company()
+                info_sistema = {'sistema_operativo': sistema_operativo, 'nombre_equipo': nombre_equipo}
+                
             else:   
                 ip_address = request.remote_addr
+                if ip_address == "127.0.0.1":
+                    ip_address="187.134.191.64"
+                        
+                info_sistema = VistaAutorizador.obtener_info_sistema()
 
+            info_geografica = VistaAutorizador.obtener_info_geografica(ip_address)
             
-            info_geografica = requests.obtener_info_geografica(ip_address)        
-            info_sistema = requests.obtener_info_sistema()
+            
             
           
             if contrasena == InfoUsuario['contrasena']:
