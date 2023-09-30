@@ -70,7 +70,7 @@ class VistaAutorizador(Resource):
 
         
 
-        response = requests.get('https://127.0.0.1:5000/usuario', json=usuario)
+        response = requests.get('https://127.0.0.1:5000/usuario', json=usuario,verify=False)
         
 
         if response.status_code == 200:
@@ -119,7 +119,7 @@ class VistaAutorizador(Resource):
                         'accion': 'NINGUNA',
                         'ataqueIntroducido': ataqueIntroducido
                     }
-                    requests.post('https://127.0.0.1:5000/loginhistory', json=registro_Login)
+                    requests.post('https://127.0.0.1:5000/loginhistory', json=registro_Login,verify=False)
                     return {'token': token}, 200
                 
                 # Si el usuario tiene registros de login, validar si el registro actual es igual a alguno de los registros anteriores
@@ -152,7 +152,7 @@ class VistaAutorizador(Resource):
                             'accion': accion,
                             'ataqueIntroducido': ataqueIntroducido
                         }
-                        requests.post('https://127.0.0.1:5000/loginhistory', json=registro_Login)
+                        requests.post('https://127.0.0.1:5000/loginhistory', json=registro_Login,verify=False)
 
                         VistaAutorizador.dobleAutenticacion(InfoUsuario)
                         return {'message': 'Se requiere doble Autenticacion'}, 401
@@ -171,7 +171,7 @@ class VistaAutorizador(Resource):
                             }
 
                             token = create_access_token(identity=usuario)
-                            requests.post('https://127.0.0.1:5000/loginhistory', json=registro_Login)
+                            requests.post('https://127.0.0.1:5000/loginhistory', json=registro_Login,verify=False)
                             return {'token': token}, 200   
 
 
@@ -188,7 +188,7 @@ class VistaAutorizador(Resource):
                     'accion': 'NINGUNA',
                     'ataqueIntroducido': ataqueIntroducido
                 }
-                requests.post('https://127.0.0.1:5000/loginhistory', json=registro_Login)
+                requests.post('https://127.0.0.1:5000/loginhistory', json=registro_Login,verify=False)
 
                 return {'message': 'Credenciales incorrectas'}, 401
         else:
