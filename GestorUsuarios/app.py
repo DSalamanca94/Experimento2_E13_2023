@@ -1,4 +1,4 @@
-from GestorUsuarios import Flask, request
+from GestorUsuarios import create_app
 from flask_restful import Resource, Api
 from .modelos import *
 from .vistas import VistaUsuario,VistaLoginHistorical
@@ -11,7 +11,7 @@ db.create_all()
 
 api = Api(app)
 api.add_resource(VistaUsuario, '/usuario')
-api.add_resource(VistaUsuario, '/loginhistory')
+api.add_resource(VistaLoginHistorical, '/loginhistory')
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', ssl_context='adhoc')

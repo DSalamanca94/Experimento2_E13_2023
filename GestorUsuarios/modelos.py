@@ -29,7 +29,7 @@ class EnumADiccionario(fields.Field):
 
 class Usuario(db.Model):
     id = db.Column(db.Integer, primary_key = True)
-    usuario = db.Column(db.String(128))
+    usuario = db.Column(db.String(128), unique=True)
     contrasena = db.Column(db.String(128))
     correoElectronico = db.Column(db.String(128))
     telefono = db.Column(db.String(128))
@@ -52,7 +52,7 @@ class LoginHistorical (db.Model):
     ataqueIntroducido= db.Column(db.Boolean) #True si el ataque fue introducido por el usuario, False si es una actividad normal
 
 class UsuarioSchema(SQLAlchemyAutoSchema):
-    canalDobleAutenticacionUsuario= EnumADiccionario(attribute=("canalDobleAutenticacionUsuario"))
+    canalDobleAutenticacion= EnumADiccionario(attribute=("canalDobleAutenticacion"))
     loginHistorical = fields.Nested('LoginHistoricalSchema', many=True)
 
     class Meta:
@@ -70,44 +70,10 @@ class LoginHistoricalSchema(SQLAlchemyAutoSchema):
          load_instance = True   
 
 
-            
-class TiposActividad(db.Model):
-    id = db.Column(db.Integer, primary_key = True)
-    nombreTipoActividad = db.Column(db.Enum(TipoActividad))
-    Usuario=db.Column(db.Integer, db.ForeignKey('usuario.id'))
-
-class TiposActividadSchema(SQLAlchemyAutoSchema):
-    nombreTipoActividad = EnumADiccionario(attribute=("nombreTipoaActividad"))
-    class Meta:
-        model = TiposActividad
-        include_relationships = True
-        load_instance = True      
 
 
 
-class AccionesDobleAutenticacion(db.Model):
-    id = db.Column(db.Integer, primary_key = True)
-    nombreAccionDobleAutenticacion = db.Column(db.Enum(AccionDobleAutenticacion))
-    Usuario=db.Column(db.Integer, db.ForeignKey('usuario.id'))
-
-class AccionesDobleAutenticacionSchema(SQLAlchemyAutoSchema):
-    nombreAccionDobleAutenticacion = EnumADiccionario(attribute=("nombreAccionDobleAutenticacion"))
-    class Meta:
-        model = AccionesDobleAutenticacion
-        include_relationships = True
-        load_instance = True      
+  
 
 
-
-class CanalesDobleAutenticacion(db.Model):
-    id = db.Column(db.Integer, primary_key = True)
-    nombreCanalDobleAutenticacion = db.Column(db.Enum(CanalDobleAutenticacion))
-    Usuario=db.Column(db.Integer, db.ForeignKey('usuario.id'))
-
-class CanalesDobleAutenticacionSchema(SQLAlchemyAutoSchema):
-    nombreCanalDobleAutenticacion = EnumADiccionario(attribute=("nombreAccionDobleAutenticacion"))
-    class Meta:
-        model = CanalesDobleAutenticacion
-        include_relationships = True
-        load_instance = True      
 

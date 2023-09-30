@@ -49,7 +49,7 @@ class VistaAutorizador(Resource):
             InfoUsuario = response.json()
             RegistroLogin = InfoUsuario['loginHistorical']
 
-            if InfoUsuario['canalDobleAutenticacion'] == 'TELEFONO':
+            if InfoUsuario['canalDobleAutenticacion']['llave'] == 'TELEFONO':
                 accion = 'ENVIO_MENSAJE_TEXTO'
             else:
                 accion = 'ENVIO_MENSAJE_CORREO'
