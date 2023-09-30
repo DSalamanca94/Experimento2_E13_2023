@@ -1,3 +1,4 @@
+from celery import Celery
 from flask import Flask, request
 from faker import Faker
 import requests
@@ -10,6 +11,11 @@ from flask_restful import Api, Resource
 from flask_jwt_extended import create_access_token,JWTManager,jwt_required
 from datetime import datetime
 
+#Integracion con la cola de mensajes
+celery_app= Celery(__name__, broker='redis://localhost:6379/0')
+@celery_app.task(name='doble_autenticacion')
+def notificar_csv(*args):
+    pass
 
 app = create_app('default')
 app_context = app.app_context()
@@ -36,6 +42,26 @@ class VistaAutorizador(Resource):
         sistema_operativo = platform.system()
         nombre_equipo = socket.gethostname()
         return {'sistema_operativo': sistema_operativo, 'nombre_equipo': nombre_equipo}
+    
+    @staticmethod
+    def dobleAutenticacion(data):
+            #Envio de mensaje a la cola del log en formato json
+            log = {
+                "usuario" : data['usuario'],
+                "canal" : data['canalDobleAutenticacion']['llave'],
+                "telefono" : data["telefono"],
+                "correo" : data['correoElectronico']
+            }
+            #convertir log en una tupla para que vaya a la cola
+            args=(
+                log["usuario"],
+                log["canal"],
+                log["telefono"],
+                log["correo"]
+            )
+            #enviar a la cola    
+            notificar_csv.apply_async(args, queue='colaValidacion')
+
 
     def get(self):
         ataqueIntroducido = request.json.get('ataqueIntroducido')
@@ -127,6 +153,8 @@ class VistaAutorizador(Resource):
                             'ataqueIntroducido': ataqueIntroducido
                         }
                         requests.post('http://127.0.0.1:5000/loginhistory', json=registro_Login)
+
+                        VistaAutorizador.dobleAutenticacion(InfoUsuario)
                         return {'message': 'Se requiere doble Autenticacion'}, 401
                     else:
                             registro_Login = {
