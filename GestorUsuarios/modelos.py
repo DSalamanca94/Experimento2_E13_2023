@@ -51,30 +51,21 @@ class LoginHistorical (db.Model):
     accion= db.Column(db.Enum(AccionDobleAutenticacion))
     ataqueIntroducido= db.Column(db.Boolean) #True si el ataque fue introducido por el usuario, False si es una actividad normal
 
-
 class UsuarioSchema(SQLAlchemyAutoSchema):
-    idUsuario= Usuario('id', many=True) 
-    Usuario= Usuario('usuario', many=True)   
-    contrasenaUsuario= Usuario('contrasena', many=True)  
-    correoElectronicoUsuario= Usuario('correoElectronico', many=True)  
-    telefonoUsuario= Usuario('telefono', many=True)  
-    canalDobleAutenticacionUsuario= Usuario('canalDobleAutenticacion', many=True)  
+    canalDobleAutenticacionUsuario= EnumADiccionario(attribute=("canalDobleAutenticacionUsuario"))
+    loginHistorical = fields.Nested('LoginHistoricalSchema', many=True)
 
-class LoginHistoricalSchema(SQLAlchemyAutoSchema):
-    id= LoginHistorical('id', many=True)
-    idUsuario= Usuario('id', many=True)   
-    fechaLogin= LoginHistorical('fecha', many=True)   
-    ipLogin= LoginHistorical('ip', many=True)   
-    paisIpLogin= LoginHistorical('paisIP', many=True) 
-    ciudadIpLogin= LoginHistorical('ciudadIP', many=True) 
-    sistemaOperativoLogin= LoginHistorical('sistemaOperativo', many=True) 
-    nombreEquipoLogin= LoginHistorical('nombreEquipo', many=True) 
-    tipoActividadLogin= LoginHistorical('tipoActividad', many=True) 
-    accionLogin= LoginHistorical('accion', many=True) 
-    ataqueIntroducidoLogin= LoginHistorical('ataqueIntroducido', many=True) 
-    
     class Meta:
          model = Usuario
+         include_relationships = True
+         load_instance = True 
+
+class LoginHistoricalSchema(SQLAlchemyAutoSchema):
+    tipoActividad = EnumADiccionario(attribute=("tipoActividad"))
+    accion = EnumADiccionario(attribute=("accion"))
+    
+    class Meta:
+         model = LoginHistorical
          include_relationships = True
          load_instance = True   
 
